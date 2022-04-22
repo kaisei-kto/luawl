@@ -20,3 +20,17 @@ luawl.getWhitelist({ discord_id: "id" }).then(response => {
 	console.log(response)
 })
 ```
+
+## Example (TypeScript)
+```ts
+/**
+ * you do not have to share luawl variable with another files, unless you want to
+ */
+import * as luawl from 'luawl'
+
+luawl.token = 'API_TOKEN'
+
+luawl.getWhitelist({ discord_id: "id" }).then(response => {
+	console.log(response)
+})
+```
