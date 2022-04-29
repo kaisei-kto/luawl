@@ -1,3 +1,5 @@
+import * as moment from "moment"
+
 type luawl_key_status = 'Assigned'|'Unassigned'|'Disabled'|'Active'
 
 interface luawl_p {
@@ -8,8 +10,11 @@ interface luawl_p {
 interface luawl_r {
 	wl_key?: string
 	discord_id?: string
-	key_status?: 'Assigned'|'Unassigned'|'Disabled'|'Active'|'Perm Blacklisted',
-	HWID?: string
+	key_status?: 'Assigned'|'Unassigned'|'Disabled'|'Active'|'Blacklisted'|'Perm Blacklisted',
+	HWID?: string,
+	isTrial?: boolean,
+	expiration?: moment,
+	hours_remaining?: number
 }
 
 interface luawl_logs_response {
@@ -23,6 +28,20 @@ interface luawl_logs_response {
 	executor_fingerprint: string,
 	game_userid: string,
 	message: string
+}
+
+interface luawl_delkey_data {
+	discord_id?: string,
+	wl_key?: string
+}
+
+interface luawl_scripts {
+	wl_script_id: string,
+	script_name: string,
+	script_notes?: string,
+	shoppy_link: string,
+	enabled: boolean,
+	created_on: string
 }
 
 /**
@@ -40,4 +59,5 @@ export async function isOnCooldown(discord_id: string) : Promise<string>;
 export async function removeCooldown(discord_id: string) : Promise<string>;
 export async function updateKeyStatus(discord_id: string, key_status: luawl_key_status) : Promise<string>;
 export async function getLogs(data: { wl_key?: string, discord_id?: string, HWID?: string }) : Promise<luawl_logs_response[]>;
-export async function deleteKey(discord_id: string) : Promise<string>
+export async function getScripts() : Promise<luawl_scripts[]>
+export async function deleteKey(data: luawl_delkey_data) : Promise<string>
