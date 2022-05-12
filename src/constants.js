@@ -7,5 +7,7 @@ module.exports = new Proxy(require('./api'), {
 	},
 	set (self, key, value) {
 		if (String(key) === 'token') Reflect.set(...arguments)
+
+		return true
 	}
 })
