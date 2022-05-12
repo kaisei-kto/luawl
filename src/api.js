@@ -28,12 +28,6 @@ async function send_post(href, body) {
 }
 
 async function addWhitelist(discord_id, trial_hours, wl_script_id) {
-	const user = await getWhitelist({ discord_id })
-
-	if (user.discord_id === discord_id) {
-		return user.wl_key
-	}
-
 	return await send_post('/whitelistUser.php', { discord_id, trial_hours, isTrial: typeof trial_hours === 'number' ? 1 : 0, wl_script_id: typeof wl_script_id === 'number' ? String(wl_script_id) : undefined })
 }
 
@@ -42,18 +36,20 @@ async function deleteKey(discord_id) {
 }
 
 async function getWhitelist(data) {
-	const whitelist = JSON.parse((await send_post('/getKey.php', data)) || '{}')
+	const whitelist = JSON.parse(await send_post('/getKey.php', data) || '{}')
 
-	if (whitelist.expiration) {
-		whitelist.expiration = moment.utc(`${whitelist.expiration}+04:00`).utcOffset(offset_time)
-	}
-	
-	if (whitelist.isTrial) {
-		whitelist.isTrial = Number(whitelist.isTrial) == 1
-	}
+	if (typeof whitelist === "object" && !Array.isArray(whitelist)) {
+		if (whitelist.expiration) {
+			whitelist.expiration = moment.utc(`${whitelist.expiration}+04:00`).utcOffset(offset_time)
+		}
+		
+		if (whitelist.isTrial) {
+			whitelist.isTrial = Number(whitelist.isTrial) == 1
+		}
 
-	if (!isNaN(Number(whitelist.hours_remaining))) {
-		whitelist.hours_remaining = Number(whitelist.hours_remaining)
+		if (!isNaN(Number(whitelist.hours_remaining))) {
+			whitelist.hours_remaining = Number(whitelist.hours_remaining)
+		}
 	}
 	
 	return whitelist
@@ -89,11 +85,14 @@ async function updateKeyStatus(discord_id, key_status) {
 	return await send_post('/updateKeyStatus.php', { discord_id, status: key_status })
 }
 
-async function getLogs(data = { discord_id, wl_key, HWID }) {
-	assert(typeof data === 'object' && !Array.isArray(data), new TypeError(`\`data\` must be an object (got \`${typeof data === 'object' ? 'array' : typeof data})\``))
-	const response = JSON.parse(await send_post('/getLogs.php', data))
-	if ('error' in response) throw new Error(response.error)
-	return response
+function getLogs(data = { discord_id, wl_key, HWID }) {
+	return new Promise(async (resolve, reject) => {
+		assert(typeof data === 'object' && !Array.isArray(data), new TypeError(`\`data\` must be an object (got \`${typeof data === 'object' ? 'array' : typeof data})\``))
+		const response = JSON.parse(await send_post('/getLogs.php', data))
+		if ('error' in response) return reject(new Error(response.error))
+
+		return resolve(response)
+	})
 }
 
 async function getScripts() {

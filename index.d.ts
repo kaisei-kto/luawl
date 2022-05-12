@@ -50,7 +50,7 @@ interface luawl_scripts {
 export var token: string?;
 
 export async function addWhitelist(discord_id: string, trial_hours?: number, wl_script_id?: number) : Promise<string>;
-export async function getWhitelist(data: luawl_p) : Promise<luawl_r>;
+export async function getWhitelist(data: luawl_p) : Promise<luawl_r|"No key found.">;
 export async function resetHWID(data: luawl_p) : Promise<string>;
 export async function createBlacklist(data: luawl_p) : Promise<string>;
 export async function removeBlacklist(data: luawl_p) : Promise<string>;
