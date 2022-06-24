@@ -61,3 +61,4 @@ export async function updateKeyStatus(discord_id: string, key_status: luawl_key_
 export async function getLogs(data: { wl_key?: string, discord_id?: string, HWID?: string }) : Promise<luawl_logs_response[]>;
 export async function getScripts() : Promise<luawl_scripts[]>
 export async function deleteKey(data: luawl_delkey_data) : Promise<string>
+export async function getBuyerRole() : Promise<?string>

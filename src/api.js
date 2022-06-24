@@ -24,7 +24,7 @@ async function send_post(href, body) {
 		body: JSON.stringify(Object.assign({
 			token: require('./constants').token
 		}, body))
-	}).then(response => response.text()))
+	}).then(response => response.json()))
 }
 
 async function addWhitelist(discord_id, trial_hours, wl_script_id) {
@@ -36,7 +36,7 @@ async function deleteKey(discord_id) {
 }
 
 async function getWhitelist(data) {
-	const whitelist = JSON.parse(await send_post('/getKey.php', data) || '{}')
+	const whitelist = await send_post('/getKey.php', data)
 
 	if (typeof whitelist === "object" && !Array.isArray(whitelist)) {
 		if (whitelist.expiration) {
@@ -88,7 +88,7 @@ async function updateKeyStatus(discord_id, key_status) {
 function getLogs(data = { discord_id, wl_key, HWID }) {
 	return new Promise(async (resolve, reject) => {
 		assert(typeof data === 'object' && !Array.isArray(data), new TypeError(`\`data\` must be an object (got \`${typeof data === 'object' ? 'array' : typeof data})\``))
-		const response = JSON.parse(await send_post('/getLogs.php', data))
+		const response = await send_post('/getLogs.php', data)
 		if ('error' in response) return reject(new Error(response.error))
 
 		return resolve(response)
@@ -96,13 +96,17 @@ function getLogs(data = { discord_id, wl_key, HWID }) {
 }
 
 async function getScripts() {
-	const scripts = JSON.parse((await send_post('/getAccountScripts.php', {})) || '[]')
+	const scripts = await send_post('/getAccountScripts.php', {})
 
 	for (const script of scripts) {
 		script.enabled = Number(script.enabled) === 1
 	}
 
 	return scripts
+}
+
+async function getBuyerRole() {
+	return await send_post('/getBuyerRole.php', {})
 }
 
 module.exports = {
@@ -117,5 +121,6 @@ module.exports = {
 	updateKeyStatus,
 	getLogs,
 	deleteKey,
-	getScripts
+	getScripts,
+	getBuyerRole
 }
