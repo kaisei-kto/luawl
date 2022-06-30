@@ -109,6 +109,12 @@ async function getBuyerRole() {
 	return await send_post('/getBuyerRole.php', {})
 }
 
+async function addKeyTags(data) {
+	assert(typeof data === 'object' && !Array.isArray(data), new TypeError(`\`data\` must be an object (got \`${typeof data === 'object' ? 'array' : typeof data})\``))
+
+	return await send_post('/addKeyTags.php', data)
+}
+
 module.exports = {
 	addWhitelist,
 	getWhitelist,
@@ -122,5 +128,6 @@ module.exports = {
 	getLogs,
 	deleteKey,
 	getScripts,
-	getBuyerRole
+	getBuyerRole,
+	addKeyTags
 }

@@ -44,6 +44,11 @@ interface luawl_scripts {
 	created_on: string
 }
 
+interface luawl_tags extends luawl_p {
+	wl_script_id?: string,
+	tags?: Array<string>
+}
+
 /**
  * @description You must always set the token before accessing any other property/method
  */
@@ -62,3 +67,4 @@ export async function getLogs(data: { wl_key?: string, discord_id?: string, HWID
 export async function getScripts() : Promise<luawl_scripts[]>
 export async function deleteKey(data: luawl_delkey_data) : Promise<string>
 export async function getBuyerRole() : Promise<?string>
+export async function addKeyTags(data: luawl_tags) : Promise<string>
