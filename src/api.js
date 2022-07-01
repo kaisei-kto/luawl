@@ -18,13 +18,15 @@ var offset_time = ''
 };
 
 async function send_post(href, body) {
-	return await (await (await import('node-fetch')).default(`https://api.luawl.com${href}`, {
+	const response = await (await import('node-fetch')).default(`https://api.luawl.com${href}`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(Object.assign({
 			token: require('./constants').token
 		}, body))
-	}).then(response => response.json()))
+	})
+
+	return await response.json()
 }
 
 async function addWhitelist(discord_id, trial_hours, wl_script_id) {
