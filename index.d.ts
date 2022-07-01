@@ -49,6 +49,10 @@ interface luawl_tags extends luawl_p {
 	tags?: Array<string>
 }
 
+interface luawl_status_p extends luawl_p {
+	status: luawl_key_status
+}
+
 /**
  * @description You must always set the token before accessing any other property/method
  */
@@ -60,9 +64,9 @@ export async function resetHWID(data: luawl_p) : Promise<string>;
 export async function createBlacklist(data: luawl_p) : Promise<string>;
 export async function removeBlacklist(data: luawl_p) : Promise<string>;
 export async function disableUser(data: luawl_p) : Promise<string>;
-export async function isOnCooldown(discord_id: string) : Promise<string>;
-export async function removeCooldown(discord_id: string) : Promise<string>;
-export async function updateKeyStatus(discord_id: string, key_status: luawl_key_status) : Promise<string>;
+export async function isOnCooldown(data: luawl_p) : Promise<string>;
+export async function removeCooldown(data: luawl_p) : Promise<string>;
+export async function updateKeyStatus(data: luawl_status_p) : Promise<string>;
 export async function getLogs(data: { wl_key?: string, discord_id?: string, HWID?: string }) : Promise<luawl_logs_response[]>;
 export async function getScripts() : Promise<luawl_scripts[]>
 export async function deleteKey(data: luawl_delkey_data) : Promise<string>

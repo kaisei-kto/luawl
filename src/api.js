@@ -73,18 +73,19 @@ async function disableUser(data) {
 	return await send_post('/disableKey.php', data)
 }
 
-async function isOnCooldown(discord_id) {
-	return await send_post('/isOnCooldown.php', { discord_id })
+async function isOnCooldown(data) {
+	return await send_post('/isOnCooldown.php', data)
 }
 
-async function removeCooldown(discord_id) {
-	return await send_post('/removeCooldown.php', { discord_id })
+async function removeCooldown(data) {
+	return await send_post('/removeCooldown.php', data)
 }
 
-async function updateKeyStatus(discord_id, key_status) {
-	assert(KEY_STATUS_TYPE.indexOf(key_status) !== -1, new Error(`\`key_status\` must be either \`${KEY_STATUS_TYPE.join('`, `')}\` (got \`${key_status}\`)`))
+async function updateKeyStatus(data) {
+	assert(typeof data === 'object' && !Array.isArray(data), new TypeError(`\`data\` must be an object (got \`${typeof data === 'object' ? 'array' : typeof data})\``))
+	assert(KEY_STATUS_TYPE.indexOf(data.status) !== -1, new Error(`\`data.status\` must be either \`${KEY_STATUS_TYPE.join('`, `')}\` (got \`${data.status}\`)`))
 
-	return await send_post('/updateKeyStatus.php', { discord_id, status: key_status })
+	return await send_post('/updateKeyStatus.php', data)
 }
 
 function getLogs(data = { discord_id, wl_key, HWID }) {
